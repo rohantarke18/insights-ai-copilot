@@ -2,6 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
+require("./src/db/schema");
 
 const app = express();
 

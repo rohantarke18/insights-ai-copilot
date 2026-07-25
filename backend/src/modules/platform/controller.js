@@ -1,9 +1,13 @@
 const service = require("./service");
 
-exports.getDashboard = (req, res) => {
-    res.json(service.getDashboard(req.params.userId));
+exports.getDashboard = async (req, res) => {
+    try {
+        const data = await service.getDashboard(req.params.userId);
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 };
-
 exports.getWorkspaces = (req, res) => {
     res.json(service.getWorkspaces(req.params.userId));
 };
