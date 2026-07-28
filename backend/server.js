@@ -13,8 +13,8 @@ const platformRoutes = require("./src/modules/platform/routes");
 app.use("/api", platformRoutes);
 
 // TODO: Person A mounts search routes here
-// TODO: Person B mounts planner routes here
-
+const plannerRoutes = require("./src/modules/planner/routes");
+app.use("/api", plannerRoutes);
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
