@@ -1,0 +1,6 @@
+{
+  "name": "iNSIGHTS",
+  "description": "AI research and innovation copilot for students and researchers to transform raw project ideas into implementation-ready research plans.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
