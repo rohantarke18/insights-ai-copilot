@@ -9,7 +9,7 @@ import { SaveToWorkspaceModal } from './components/SaveToWorkspaceModal';
 import { LoginModal } from './components/LoginModal';
 import { SessionSidebar } from './components/SessionSidebar';
 import { Source, User, ResearchSession } from './types';
-import { getDashboardData } from './services/api';
+import { getDashboardData, DEFAULT_USER_ID } from './services/api';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<'dashboard' | 'input' | 'deepsearch' | 'projecthub' | 'workspaces'>('dashboard');
@@ -48,13 +48,13 @@ export default function App() {
 
   // Fetch session history list
   const loadSessions = async () => {
-    try {
-      const data = await getDashboardData(user?.id);
-      setAllSessions(data.sessions);
-    } catch (e) {
-      console.error('Failed to load sessions history', e);
-    }
-  };
+  try {
+    const data = await getDashboardData(DEFAULT_USER_ID);
+    setAllSessions(data.sessions);
+  } catch (e) {
+    console.error('Failed to load sessions history', e);
+  }
+};
 
   useEffect(() => {
     loadSessions();

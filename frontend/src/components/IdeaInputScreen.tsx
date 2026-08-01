@@ -103,14 +103,14 @@ export const IdeaInputScreen: React.FC<IdeaInputScreenProps> = ({ onSessionCreat
       
       {/* Header Section */}
       <div className="mb-8">
-        <div className="inline-flex items-center space-x-2 px-2.5 py-1 bg-[#EFECE6] border border-[#E7E2D8] rounded-xs text-xs font-mono text-[#524E48] mb-4">
+        <div className="inline-flex items-center space-x-2 px-2.5 py-1 bg-[#EFECE6] dark:bg-[#242422] border border-[#E7E2D8] dark:border-[#2E2E2E] rounded-xs text-xs font-mono text-[#524E48] dark:text-[#A09A8E] mb-4">
           <Sparkles className="w-3.5 h-3.5 text-[#C85A17]" />
           <span>IDEATION ENGINE v2.4</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-[#1A1A1A] tracking-tight leading-tight mb-3">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-[#1A1A1A] dark:text-[#E6E2D8] tracking-tight leading-tight mb-3">
           What do you want to build?
         </h1>
-        <p className="text-base sm:text-lg text-[#524E48] max-w-2xl font-normal leading-relaxed">
+        <p className="text-base sm:text-lg text-[#524E48] dark:text-[#A09A8E] max-w-2xl font-normal leading-relaxed">
           Input your raw project idea or engineering hypothesis. iNSIGHTS will analyze published papers, open GitHub repos, and web benchmarks to build an implementation-ready plan.
         </p>
       </div>
@@ -118,9 +118,9 @@ export const IdeaInputScreen: React.FC<IdeaInputScreenProps> = ({ onSessionCreat
       {/* Main Input Form or Multi-step Loading State */}
       {!isSubmitting ? (
         <form onSubmit={handleSubmit} className="mb-10">
-          <div className="bg-[#FAF9F5] border-2 border-[#1A1A1A] rounded-sm p-4 sm:p-6 shadow-[4px_4px_0px_0px_#1A1A1A] transition-all">
+          <div className="bg-[#FAF9F5] dark:bg-[#1A1A1A] border-2 border-[#1A1A1A] dark:border-[#333] rounded-sm p-4 sm:p-6 shadow-[4px_4px_0px_0px_#1A1A1A] transition-all">
             <div className="flex items-center justify-between mb-2">
-              <label htmlFor="idea-input" className="block text-xs font-mono uppercase tracking-wider text-[#706B63] font-semibold">
+              <label htmlFor="idea-input" className="block text-xs font-mono uppercase tracking-wider text-[#706B63] dark:text-[#A09A8E] font-semibold">
                 Project Concept / Research Goal
               </label>
 
@@ -131,7 +131,7 @@ export const IdeaInputScreen: React.FC<IdeaInputScreenProps> = ({ onSessionCreat
                   value={language}
                   onChange={(e) => setLanguage(e.target.value as SupportedLanguage)}
                   title="Summary output language"
-                  className="bg-[#FAF9F5] border border-[#E7E2D8] focus:border-[#C85A17] rounded-xs px-2 py-1 text-xs font-mono text-[#1A1A1A] focus:outline-none cursor-pointer"
+                  className="bg-[#FAF9F5] dark:bg-[#1A1A1A] border border-[#E7E2D8] dark:border-[#2E2E2E] focus:border-[#C85A17] rounded-xs px-2 py-1 text-xs font-mono text-[#1A1A1A] dark:text-[#E6E2D8] focus:outline-none cursor-pointer"
                 >
                   {SUPPORTED_LANGUAGES.map((lang) => (
                     <option key={lang.code} value={lang.code}>
@@ -148,7 +148,7 @@ export const IdeaInputScreen: React.FC<IdeaInputScreenProps> = ({ onSessionCreat
               value={ideaText}
               onChange={(e) => setIdeaText(e.target.value)}
               placeholder="e.g. Build an autonomous drone system that maps indoor crop health using thermal cameras and lightweight edge models..."
-              className="w-full bg-[#FAF9F5] border border-[#E7E2D8] focus:border-[#C85A17] rounded-sm p-3 text-base text-[#1A1A1A] placeholder-[#9C9588] focus:outline-none focus:ring-1 focus:ring-[#C85A17] transition-all font-sans resize-y"
+              className="w-full bg-[#FAF9F5] dark:bg-[#1A1A1A] border border-[#E7E2D8] dark:border-[#2E2E2E] focus:border-[#C85A17] rounded-sm p-3 text-base text-[#1A1A1A] dark:text-[#E6E2D8] placeholder-[#9C9588] focus:outline-none focus:ring-1 focus:ring-[#C85A17] transition-all font-sans resize-y"
               required
             />
 
@@ -159,8 +159,8 @@ export const IdeaInputScreen: React.FC<IdeaInputScreenProps> = ({ onSessionCreat
               </div>
             )}
 
-            <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-3 border-t border-[#E7E2D8]">
-              <div className="flex items-center space-x-2 text-xs font-mono text-[#706B63]">
+            <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-3 border-t border-[#E7E2D8] dark:border-[#2E2E2E]">
+              <div className="flex items-center space-x-2 text-xs font-mono text-[#706B63] dark:text-[#A09A8E]">
                 <Compass className="w-4 h-4 text-[#C85A17]" />
                 <span>DeepSearch scan includes: arXiv, IEEE, GitHub, PubMed, Web</span>
               </div>
@@ -182,16 +182,16 @@ export const IdeaInputScreen: React.FC<IdeaInputScreenProps> = ({ onSessionCreat
         </form>
       ) : (
         /* Sequential Labeled Step Loader */
-        <div className="mb-10 bg-[#F4F1EA] border border-[#1A1A1A] rounded-sm p-6 sm:p-8 shadow-[4px_4px_0px_0px_#1A1A1A]">
-          <div className="flex items-center space-x-3 mb-6 pb-4 border-b border-[#E7E2D8]">
+        <div className="mb-10 bg-[#F4F1EA] dark:bg-[#242422] border border-[#1A1A1A] dark:border-[#333] rounded-sm p-6 sm:p-8 shadow-[4px_4px_0px_0px_#1A1A1A]">
+          <div className="flex items-center space-x-3 mb-6 pb-4 border-b border-[#E7E2D8] dark:border-[#2E2E2E]">
             <div className="w-8 h-8 rounded-full bg-[#C85A17]/10 text-[#C85A17] flex items-center justify-center">
               <Loader2 className="w-5 h-5 animate-spin" />
             </div>
             <div>
-              <h3 className="font-serif font-bold text-lg text-[#1A1A1A]">
+              <h3 className="font-serif font-bold text-lg text-[#1A1A1A] dark:text-[#E6E2D8]">
                 Analyzing Project Hypothesis
               </h3>
-              <p className="text-xs font-mono text-[#706B63] truncate max-w-md">
+              <p className="text-xs font-mono text-[#706B63] dark:text-[#A09A8E] truncate max-w-md">
                 "{ideaText}"
               </p>
             </div>
@@ -207,9 +207,9 @@ export const IdeaInputScreen: React.FC<IdeaInputScreenProps> = ({ onSessionCreat
                   key={step.id}
                   className={`flex items-start space-x-3 p-3 rounded-sm transition-all border ${
                     isCurrent
-                      ? 'bg-[#FAF9F5] border-[#C85A17] shadow-xs'
+                      ? 'bg-[#FAF9F5] dark:bg-[#1A1A1A] border-[#C85A17] shadow-xs'
                       : isDone
-                      ? 'bg-[#FAF9F5]/60 border-[#E7E2D8]'
+                      ? 'bg-[#FAF9F5] dark:bg-[#1A1A1A]/60 border-[#E7E2D8] dark:border-[#2E2E2E]'
                       : 'bg-transparent border-transparent opacity-40'
                   }`}
                 >
@@ -219,7 +219,7 @@ export const IdeaInputScreen: React.FC<IdeaInputScreenProps> = ({ onSessionCreat
                     ) : isCurrent ? (
                       <Loader2 className="w-5 h-5 text-[#C85A17] animate-spin" />
                     ) : (
-                      <div className="w-5 h-5 rounded-full border border-[#9C9588] flex items-center justify-center text-[10px] font-mono text-[#706B63]">
+                      <div className="w-5 h-5 rounded-full border border-[#9C9588] flex items-center justify-center text-[10px] font-mono text-[#706B63] dark:text-[#A09A8E]">
                         {step.id}
                       </div>
                     )}
@@ -227,7 +227,7 @@ export const IdeaInputScreen: React.FC<IdeaInputScreenProps> = ({ onSessionCreat
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <span className={`text-sm font-medium ${isCurrent ? 'text-[#1A1A1A]' : 'text-[#524E48]'}`}>
+                      <span className={`text-sm font-medium ${isCurrent ? 'text-[#1A1A1A] dark:text-[#E6E2D8]' : 'text-[#524E48] dark:text-[#A09A8E]'}`}>
                         {step.label}
                       </span>
                       {isCurrent && (
@@ -236,7 +236,7 @@ export const IdeaInputScreen: React.FC<IdeaInputScreenProps> = ({ onSessionCreat
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-[#706B63] mt-0.5 font-sans">
+                    <p className="text-xs text-[#706B63] dark:text-[#A09A8E] mt-0.5 font-sans">
                       {step.detail}
                     </p>
                   </div>
@@ -245,18 +245,18 @@ export const IdeaInputScreen: React.FC<IdeaInputScreenProps> = ({ onSessionCreat
             })}
           </div>
 
-          <div className="mt-6 pt-4 border-t border-[#E7E2D8] flex items-center justify-between text-xs font-mono text-[#706B63]">
-            <span>ESTIMATED TIME: ~3.2 SEC</span>
+          <div className="mt-6 pt-4 border-t border-[#E7E2D8] dark:border-[#2E2E2E] flex items-center justify-between text-xs font-mono text-[#706B63] dark:text-[#A09A8E]">
+            <span> </span>
             <span className="animate-pulse text-[#C85A17]">Formulating citations [1][2][3]...</span>
           </div>
         </div>
       )}
 
       {/* Clickable Example Prompts */}
-      <div className="border-t border-[#E7E2D8] pt-8">
+      <div className="border-t border-[#E7E2D8] dark:border-[#2E2E2E] pt-8">
         <div className="flex items-center space-x-2 mb-4">
           <Lightbulb className="w-4 h-4 text-[#C85A17]" />
-          <h2 className="text-xs font-mono uppercase tracking-widest text-[#706B63] font-semibold">
+          <h2 className="text-xs font-mono uppercase tracking-widest text-[#706B63] dark:text-[#A09A8E] font-semibold">
             Or start with a curated project prompt
           </h2>
         </div>
@@ -267,17 +267,17 @@ export const IdeaInputScreen: React.FC<IdeaInputScreenProps> = ({ onSessionCreat
               key={idx}
               type="button"
               onClick={() => handleSelectExample(prompt.text)}
-              className="text-left bg-[#F4F1EA] hover:bg-[#FAF9F5] border border-[#E7E2D8] hover:border-[#1A1A1A] p-4 rounded-sm transition-all group cursor-pointer focus:outline-none"
+              className="text-left bg-[#F4F1EA] dark:bg-[#242422] hover:bg-[#FAF9F5] dark:hover:bg-[#2E2E2C] border border-[#E7E2D8] dark:border-[#2E2E2E] hover:border-[#1A1A1A] dark:hover:border-[#666] p-4 rounded-sm transition-all group cursor-pointer focus:outline-none"
             >
               <div className="flex items-center justify-between mb-1.5">
-                <span className="font-serif font-semibold text-sm text-[#1A1A1A] group-hover:text-[#C85A17] transition-colors">
+                <span className="font-serif font-semibold text-sm text-[#1A1A1A] dark:text-[#E6E2D8] group-hover:text-[#C85A17] transition-colors">
                   {prompt.title}
                 </span>
-                <span className="text-[10px] font-mono bg-[#EFECE6] border border-[#E7E2D8] text-[#524E48] px-1.5 py-0.5 rounded-xs">
+                <span className="text-[10px] font-mono bg-[#EFECE6] dark:bg-[#242422] border border-[#E7E2D8] dark:border-[#2E2E2E] text-[#524E48] dark:text-[#A09A8E] px-1.5 py-0.5 rounded-xs">
                   {prompt.category}
                 </span>
               </div>
-              <p className="text-xs text-[#524E48] font-sans line-clamp-2 leading-relaxed">
+              <p className="text-xs text-[#524E48] dark:text-[#A09A8E] font-sans line-clamp-2 leading-relaxed">
                 "{prompt.text}"
               </p>
             </button>

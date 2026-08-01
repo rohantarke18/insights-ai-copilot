@@ -15,7 +15,7 @@ const API_BASE_URL =
 
 // Matches the default userId the backend falls back to when none is passed
 // (see search/controller.js, platform/controller.js).
-const DEFAULT_USER_ID = 'user-student-1';
+export const DEFAULT_USER_ID = 'user-student-1';
 
 class ApiError extends Error {
   status: number;

@@ -63,9 +63,23 @@ export interface ApiOrDataset {
   license?: string;
 }
 
+export interface ArchitectureComponent {
+  name: string;
+  role: string;
+  techChoice: string;
+  reasoning: string;
+}
+
+export interface Architecture {
+  overview: string;
+  components: ArchitectureComponent[];
+  dataFlow: string;
+  diagramMermaid: string;
+}
+
 export interface ProjectPlan {
   sessionId: string;
-  architecture: string;
+  architecture: Architecture;
   techStack: TechStackCategory[];
   milestones: Milestone[];
   apisAndDatasets: ApiOrDataset[];

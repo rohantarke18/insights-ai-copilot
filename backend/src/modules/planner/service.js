@@ -35,7 +35,19 @@ function validatePlanShape(plan) {
       throw new Error(`LLM response missing required field: ${field}`);
     }
   }
-  if (!Array.isArray(plan.techStack) || !Array.isArray(plan.milestones) || !Array.isArray(plan.apisAndDatasets)) {
+  if (typeof plan.architecture !== "object" || plan.architecture === null) {
+    throw new Error("LLM response field 'architecture' must be an object.");
+  }
+  const archFields = ["overview", "components", "dataFlow", "diagramMermaid"];
+for (const field of archFields) {
+  if (!(field in plan.architecture)) {
+    throw new Error(`LLM response 'architecture' missing required field: ${field}`);
+  }
+}
+if (typeof plan.architecture.diagramMermaid !== "string") {
+  throw new Error("LLM response 'architecture.diagramMermaid' must be a string.");
+}
+  if (!Array.isArray(plan.architecture.components) || !Array.isArray(plan.techStack) || !Array.isArray(plan.milestones) || !Array.isArray(plan.apisAndDatasets)) {
     throw new Error("LLM response has an array field that is not an array.");
   }
 }

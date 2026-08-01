@@ -11,7 +11,7 @@ function savePlan(sessionId, plan) {
        apis_json = excluded.apis_json`
   ).run(
     sessionId,
-    plan.architecture,
+    JSON.stringify(plan.architecture),   // ← fixed
     JSON.stringify(plan.techStack),
     JSON.stringify(plan.milestones),
     JSON.stringify(plan.apisAndDatasets)
@@ -23,7 +23,7 @@ function getPlan(sessionId) {
   if (!row) return null;
   return {
     sessionId,
-    architecture: row.architecture,
+    architecture: JSON.parse(row.architecture),   // ← fixed
     techStack: JSON.parse(row.tech_stack_json),
     milestones: JSON.parse(row.milestones_json),
     apisAndDatasets: JSON.parse(row.apis_json),

@@ -24,7 +24,7 @@ async function callLLM(prompt) {
     },
     body: JSON.stringify({
       model: MODEL,
-      max_tokens: 2000,
+      max_tokens: 4000,
       // The prompt already demands raw JSON with no fences; this forces
       // it at the API level too, so parsePlanResponse() in service.js
       // has less to strip/retry on.

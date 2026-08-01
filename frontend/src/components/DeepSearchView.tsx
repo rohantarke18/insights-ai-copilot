@@ -128,14 +128,14 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-[#EFECE6] w-1/3 rounded-xs"></div>
-          <div className="h-24 bg-[#EFECE6] rounded-sm"></div>
+          <div className="h-8 bg-[#EFECE6] dark:bg-[#242422] w-1/3 rounded-xs"></div>
+          <div className="h-24 bg-[#EFECE6] dark:bg-[#242422] rounded-sm"></div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-4">
-              <div className="h-32 bg-[#EFECE6] rounded-sm"></div>
-              <div className="h-32 bg-[#EFECE6] rounded-sm"></div>
+              <div className="h-32 bg-[#EFECE6] dark:bg-[#242422] rounded-sm"></div>
+              <div className="h-32 bg-[#EFECE6] dark:bg-[#242422] rounded-sm"></div>
             </div>
-            <div className="h-64 bg-[#EFECE6] rounded-sm"></div>
+            <div className="h-64 bg-[#EFECE6] dark:bg-[#242422] rounded-sm"></div>
           </div>
         </div>
       </div>
@@ -187,7 +187,7 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
       const parts = para.split(/(\[\d+\])/g);
 
       return (
-        <p key={pIdx} className="mb-4 text-[#1A1A1A] text-base leading-relaxed font-sans">
+        <p key={pIdx} className="mb-4 text-[#1A1A1A] dark:text-[#E6E2D8] text-base leading-relaxed font-sans">
           {parts.map((part, idx) => {
             const citeMatch = part.match(/^\[(\d+)\]$/);
             if (citeMatch) {
@@ -209,7 +209,7 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
                   className={`inline-flex items-center justify-center px-1 py-0.5 mx-0.5 text-xs font-mono font-bold rounded-xs transition-all cursor-pointer ${
                     isHighlighted
                       ? 'bg-[#C85A17] text-[#FAF9F5] scale-110 shadow-xs'
-                      : 'bg-[#EFECE6] hover:bg-[#C85A17]/20 text-[#C85A17] border border-[#E7E2D8]'
+                      : 'bg-[#EFECE6] dark:bg-[#242422] hover:bg-[#C85A17]/20 text-[#C85A17] border border-[#E7E2D8] dark:border-[#2E2E2E]'
                   }`}
                   title={`Jump to reference [${citeNum}]`}
                 >
@@ -228,15 +228,15 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
       
       {/* Top Banner / Actions Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 mb-8 border-b border-[#E7E2D8]">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 mb-8 border-b border-[#E7E2D8] dark:border-[#2E2E2E]">
         <div>
-          <div className="flex items-center space-x-2 text-xs font-mono text-[#706B63] mb-1">
+          <div className="flex items-center space-x-2 text-xs font-mono text-[#706B63] dark:text-[#A09A8E] mb-1">
             <Sparkles className="w-3.5 h-3.5 text-[#C85A17]" />
             <span>DEEPSEARCH SYNTHESIS</span>
             <span>•</span>
             <span>{data.sources.length} SOURCES ANALYZED</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-[#1A1A1A]">
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-[#1A1A1A] dark:text-[#E6E2D8]">
             Literature Review & Source Clustering
           </h1>
         </div>
@@ -259,22 +259,22 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
         <div className="lg:col-span-8 space-y-8">
           
           {/* Synthesized Research Summary Card */}
-          <div className="bg-[#FAF9F5] border-2 border-[#1A1A1A] rounded-sm p-6 sm:p-8 shadow-[4px_4px_0px_0px_#1A1A1A]">
-            <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#E7E2D8]">
+          <div className="bg-[#FAF9F5] dark:bg-[#1A1A1A] border-2 border-[#1A1A1A] dark:border-[#333] rounded-sm p-6 sm:p-8 shadow-[4px_4px_0px_0px_#1A1A1A]">
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#E7E2D8] dark:border-[#2E2E2E]">
               <div className="flex items-center space-x-2">
                 <FileText className="w-4 h-4 text-[#C85A17]" />
-                <h2 className="text-xs font-mono uppercase tracking-widest text-[#706B63] font-bold">
+                <h2 className="text-xs font-mono uppercase tracking-widest text-[#706B63] dark:text-[#A09A8E] font-bold">
                   Synthesized Literature Review
                 </h2>
               </div>
-              <span className="text-[10px] font-mono bg-[#EFECE6] border border-[#E7E2D8] text-[#524E48] px-2 py-0.5 rounded-xs">
+              <span className="text-[10px] font-mono bg-[#EFECE6] dark:bg-[#242422] border border-[#E7E2D8] dark:border-[#2E2E2E] text-[#524E48] dark:text-[#A09A8E] px-2 py-0.5 rounded-xs">
                 AI Cross-Referenced
               </span>
             </div>
 
             {renderSummaryWithCitations(data.summary)}
 
-            <div className="mt-4 pt-3 border-t border-[#E7E2D8] flex items-center justify-between text-xs text-[#706B63]">
+            <div className="mt-4 pt-3 border-t border-[#E7E2D8] dark:border-[#2E2E2E] flex items-center justify-between text-xs text-[#706B63] dark:text-[#A09A8E]">
               <span className="font-mono text-[11px]">Hover or click any citation tag [1] to locate source detail</span>
               <span className="font-mono text-[11px] text-[#C85A17]">100% Referenced</span>
             </div>
@@ -284,11 +284,11 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
               separate from DeepSearch above. Re-checks the live web for new
               sources on the same idea rather than re-analyzing what's
               already been found. */}
-          <div className="bg-[#FAF9F5] border border-[#1A1A1A] rounded-sm p-5 sm:p-6 shadow-[3px_3px_0px_0px_#1A1A1A]">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 pb-3 border-b border-[#E7E2D8]">
+          <div className="bg-[#FAF9F5] dark:bg-[#1A1A1A] border border-[#1A1A1A] dark:border-[#333] rounded-sm p-5 sm:p-6 shadow-[3px_3px_0px_0px_#1A1A1A]">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 pb-3 border-b border-[#E7E2D8] dark:border-[#2E2E2E]">
               <div className="flex items-center space-x-2">
                 <Radio className="w-4 h-4 text-[#C85A17]" />
-                <h2 className="text-xs font-mono uppercase tracking-widest text-[#706B63] font-bold">
+                <h2 className="text-xs font-mono uppercase tracking-widest text-[#706B63] dark:text-[#A09A8E] font-bold">
                   Real-time Web Intelligence
                 </h2>
               </div>
@@ -298,8 +298,8 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
                 disabled={refreshing}
                 className={`inline-flex items-center justify-center space-x-2 px-4 py-2 text-xs font-mono font-medium rounded-sm transition-colors shadow-xs ${
                   refreshing
-                    ? 'bg-[#EFECE6] text-[#9C9588] cursor-not-allowed'
-                    : 'bg-[#1A1A1A] hover:bg-[#C85A17] text-[#FAF9F5] cursor-pointer'
+                    ? 'bg-[#EFECE6] dark:bg-[#242422] text-[#9C9588] cursor-not-allowed'
+                    : 'bg-[#1A1A1A] dark:bg-[#2A2A28] hover:bg-[#C85A17] text-[#FAF9F5] cursor-pointer'
                 }`}
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
@@ -307,14 +307,14 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
               </button>
             </div>
 
-            <p className="text-xs text-[#524E48] font-sans leading-relaxed mb-3">
+            <p className="text-xs text-[#524E48] dark:text-[#A09A8E] font-sans leading-relaxed mb-3">
               Re-scans the live web for new sources on this idea since your last check — separate from the DeepSearch summary above, which only reflects sources found at session creation.
             </p>
 
             <div className="flex flex-wrap items-center gap-3 text-xs font-mono">
               {lastCheckedAt && (
-                <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 bg-[#EFECE6] border border-[#E7E2D8] text-[#524E48] rounded-xs">
-                  <Clock className="w-3 h-3 text-[#706B63]" />
+                <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 bg-[#EFECE6] dark:bg-[#242422] border border-[#E7E2D8] dark:border-[#2E2E2E] text-[#524E48] dark:text-[#A09A8E] rounded-xs">
+                  <Clock className="w-3 h-3 text-[#706B63] dark:text-[#A09A8E]" />
                   <span>Last checked: {formatCheckedAt(lastCheckedAt)}</span>
                 </span>
               )}
@@ -326,7 +326,7 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
                     <span>+{newSourcesFound} new source{newSourcesFound === 1 ? '' : 's'} found</span>
                   </span>
                 ) : (
-                  <span className="inline-flex items-center px-2.5 py-1 bg-[#EFECE6] border border-[#E7E2D8] text-[#706B63] rounded-xs">
+                  <span className="inline-flex items-center px-2.5 py-1 bg-[#EFECE6] dark:bg-[#242422] border border-[#E7E2D8] dark:border-[#2E2E2E] text-[#706B63] dark:text-[#A09A8E] rounded-xs">
                     No new sources since last check
                   </span>
                 )
@@ -340,11 +340,11 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
 
           {/* Knowledge Clusters Section */}
           {(clustersLoading || clusters.length > 0) && (
-            <div className="bg-[#FAF9F5] border border-[#1A1A1A] rounded-sm p-5 sm:p-6 shadow-[3px_3px_0px_0px_#1A1A1A]">
-              <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#E7E2D8]">
+            <div className="bg-[#FAF9F5] dark:bg-[#1A1A1A] border border-[#1A1A1A] dark:border-[#333] rounded-sm p-5 sm:p-6 shadow-[3px_3px_0px_0px_#1A1A1A]">
+              <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#E7E2D8] dark:border-[#2E2E2E]">
                 <div className="flex items-center space-x-2">
                   <Layers className="w-4 h-4 text-[#C85A17]" />
-                  <h2 className="text-xs font-mono uppercase tracking-widest text-[#706B63] font-bold">
+                  <h2 className="text-xs font-mono uppercase tracking-widest text-[#706B63] dark:text-[#A09A8E] font-bold">
                     Knowledge Clusters
                   </h2>
                 </div>
@@ -360,9 +360,9 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
 
               {clustersLoading ? (
                 <div className="flex flex-wrap gap-2 animate-pulse">
-                  <div className="h-16 w-40 bg-[#EFECE6] rounded-sm"></div>
-                  <div className="h-16 w-48 bg-[#EFECE6] rounded-sm"></div>
-                  <div className="h-16 w-36 bg-[#EFECE6] rounded-sm"></div>
+                  <div className="h-16 w-40 bg-[#EFECE6] dark:bg-[#242422] rounded-sm"></div>
+                  <div className="h-16 w-48 bg-[#EFECE6] dark:bg-[#242422] rounded-sm"></div>
+                  <div className="h-16 w-36 bg-[#EFECE6] dark:bg-[#242422] rounded-sm"></div>
                 </div>
               ) : (
                 <div className="flex flex-wrap gap-2.5">
@@ -376,16 +376,16 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
                         className={`text-left px-3.5 py-2.5 rounded-sm border transition-all cursor-pointer max-w-[240px] ${
                           isActive
                             ? 'bg-[#C85A17] border-[#C85A17] text-[#FAF9F5]'
-                            : 'bg-[#EFECE6] border-[#E7E2D8] hover:border-[#1A1A1A] text-[#1A1A1A]'
+                            : 'bg-[#EFECE6] dark:bg-[#242422] border-[#E7E2D8] dark:border-[#2E2E2E] hover:border-[#1A1A1A] dark:hover:border-[#666] text-[#1A1A1A] dark:text-[#E6E2D8]'
                         }`}
                       >
                         <div className="flex items-center gap-1.5">
                           <span className="font-serif font-semibold text-sm truncate">{cluster.label}</span>
-                          <span className={`text-[10px] font-mono shrink-0 ${isActive ? 'text-[#FAF9F5]/80' : 'text-[#706B63]'}`}>
+                          <span className={`text-[10px] font-mono shrink-0 ${isActive ? 'text-[#FAF9F5]/80' : 'text-[#706B63] dark:text-[#A09A8E]'}`}>
                             ({cluster.sources.length})
                           </span>
                         </div>
-                        <p className={`text-[11px] mt-0.5 leading-snug line-clamp-2 ${isActive ? 'text-[#FAF9F5]/90' : 'text-[#706B63]'}`}>
+                        <p className={`text-[11px] mt-0.5 leading-snug line-clamp-2 ${isActive ? 'text-[#FAF9F5]/90' : 'text-[#706B63] dark:text-[#A09A8E]'}`}>
                           {cluster.description}
                         </p>
                       </button>
@@ -393,7 +393,7 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
                   })}
                 </div>
               )}
-              <p className="text-[11px] text-[#706B63] mt-3 font-mono">
+              <p className="text-[11px] text-[#706B63] dark:text-[#A09A8E] mt-3 font-mono">
                 Click a cluster to filter the sources below to that theme.
               </p>
             </div>
@@ -402,16 +402,16 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
           {/* Source List Section */}
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-              <h2 className="font-serif font-bold text-xl text-[#1A1A1A]">
+              <h2 className="font-serif font-bold text-xl text-[#1A1A1A] dark:text-[#E6E2D8]">
                 Primary Evidence & Citations ({filteredSources.length})
               </h2>
 
               {/* Source Type Filter */}
-              <div className="flex items-center space-x-1 bg-[#EFECE6] p-1 rounded-sm border border-[#E7E2D8]">
+              <div className="flex items-center space-x-1 bg-[#EFECE6] dark:bg-[#242422] p-1 rounded-sm border border-[#E7E2D8] dark:border-[#2E2E2E]">
                 <button
                   onClick={() => setFilterType('all')}
                   className={`px-2.5 py-1 text-xs font-mono rounded-xs transition-all cursor-pointer ${
-                    filterType === 'all' ? 'bg-[#1A1A1A] text-[#FAF9F5]' : 'text-[#524E48] hover:text-[#1A1A1A]'
+                    filterType === 'all' ? 'bg-[#1A1A1A] dark:bg-[#2A2A28] text-[#FAF9F5]' : 'text-[#524E48] dark:text-[#A09A8E] hover:text-[#1A1A1A] dark:hover:text-[#E6E2D8]'
                   }`}
                 >
                   All ({data.sources.length})
@@ -419,7 +419,7 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
                 <button
                   onClick={() => setFilterType('paper')}
                   className={`px-2.5 py-1 text-xs font-mono rounded-xs transition-all cursor-pointer ${
-                    filterType === 'paper' ? 'bg-[#1A1A1A] text-[#FAF9F5]' : 'text-[#524E48] hover:text-[#1A1A1A]'
+                    filterType === 'paper' ? 'bg-[#1A1A1A] dark:bg-[#2A2A28] text-[#FAF9F5]' : 'text-[#524E48] dark:text-[#A09A8E] hover:text-[#1A1A1A] dark:hover:text-[#E6E2D8]'
                   }`}
                 >
                   Papers ({paperCount})
@@ -427,7 +427,7 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
                 <button
                   onClick={() => setFilterType('github')}
                   className={`px-2.5 py-1 text-xs font-mono rounded-xs transition-all cursor-pointer ${
-                    filterType === 'github' ? 'bg-[#1A1A1A] text-[#FAF9F5]' : 'text-[#524E48] hover:text-[#1A1A1A]'
+                    filterType === 'github' ? 'bg-[#1A1A1A] dark:bg-[#2A2A28] text-[#FAF9F5]' : 'text-[#524E48] dark:text-[#A09A8E] hover:text-[#1A1A1A] dark:hover:text-[#E6E2D8]'
                   }`}
                 >
                   GitHub ({githubCount})
@@ -435,7 +435,7 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
                 <button
                   onClick={() => setFilterType('web')}
                   className={`px-2.5 py-1 text-xs font-mono rounded-xs transition-all cursor-pointer ${
-                    filterType === 'web' ? 'bg-[#1A1A1A] text-[#FAF9F5]' : 'text-[#524E48] hover:text-[#1A1A1A]'
+                    filterType === 'web' ? 'bg-[#1A1A1A] dark:bg-[#2A2A28] text-[#FAF9F5]' : 'text-[#524E48] dark:text-[#A09A8E] hover:text-[#1A1A1A] dark:hover:text-[#E6E2D8]'
                   }`}
                 >
                   Web ({webCount})
@@ -453,16 +453,16 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
                   <div
                     key={source.id}
                     id={`source-card-${source.citationIndex}`}
-                    className={`bg-[#FAF9F5] border p-5 rounded-sm transition-all ${
+                    className={`bg-[#FAF9F5] dark:bg-[#1A1A1A] border p-5 rounded-sm transition-all ${
                       isHighlighted
-                        ? 'border-2 border-[#C85A17] bg-[#FAF9F5] shadow-md scale-[1.01]'
-                        : 'border-[#E7E2D8] hover:border-[#1A1A1A]'
+                        ? 'border-2 border-[#C85A17] bg-[#FAF9F5] dark:bg-[#1A1A1A] shadow-md scale-[1.01]'
+                        : 'border-[#E7E2D8] dark:border-[#2E2E2E] hover:border-[#1A1A1A] dark:hover:border-[#666]'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-3 mb-2">
                       <div className="flex items-center space-x-2">
                         {/* Citation Badge */}
-                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-xs bg-[#1A1A1A] text-[#FAF9F5] font-mono text-xs font-bold shrink-0">
+                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-xs bg-[#1A1A1A] dark:bg-[#2A2A28] text-[#FAF9F5] font-mono text-xs font-bold shrink-0">
                           [{source.citationIndex}]
                         </span>
 
@@ -481,13 +481,13 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
                         </span>
 
                         {source.stars && (
-                          <span className="text-[10px] font-mono text-[#706B63] bg-[#EFECE6] px-1.5 py-0.5 rounded-xs">
+                          <span className="text-[10px] font-mono text-[#706B63] dark:text-[#A09A8E] bg-[#EFECE6] dark:bg-[#242422] px-1.5 py-0.5 rounded-xs">
                             ★ {source.stars}
                           </span>
                         )}
 
                         {source.publishedYear && (
-                          <span className="text-[10px] font-mono text-[#706B63]">
+                          <span className="text-[10px] font-mono text-[#706B63] dark:text-[#A09A8E]">
                             Year: {source.publishedYear}
                           </span>
                         )}
@@ -496,7 +496,7 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
                             date — silently omitted otherwise rather than
                             showing an "unknown date" placeholder. */}
                         {source.publishedDate && (
-                          <span className="inline-flex items-center space-x-1 text-[10px] font-mono text-[#706B63] bg-[#EFECE6] px-1.5 py-0.5 rounded-xs">
+                          <span className="inline-flex items-center space-x-1 text-[10px] font-mono text-[#706B63] dark:text-[#A09A8E] bg-[#EFECE6] dark:bg-[#242422] px-1.5 py-0.5 rounded-xs">
                             <Clock className="w-2.5 h-2.5" />
                             <span>{formatPublishedDate(source.publishedDate)}</span>
                           </span>
@@ -509,7 +509,7 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
                         className={`inline-flex items-center space-x-1.5 px-3 py-1 text-xs font-mono rounded-xs border transition-colors cursor-pointer ${
                           isSaved
                             ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                            : 'bg-[#EFECE6] hover:bg-[#1A1A1A] hover:text-[#FAF9F5] text-[#1A1A1A] border-[#E7E2D8]'
+                            : 'bg-[#EFECE6] dark:bg-[#242422] hover:bg-[#1A1A1A] dark:hover:bg-[#3A3A38] hover:text-[#FAF9F5] text-[#1A1A1A] dark:text-[#E6E2D8] border-[#E7E2D8] dark:border-[#2E2E2E]'
                         }`}
                       >
                         {isSaved ? <Check className="w-3.5 h-3.5" /> : <Bookmark className="w-3.5 h-3.5" />}
@@ -518,7 +518,7 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
                     </div>
 
                     {/* Source Title & Link */}
-                    <h3 className="font-serif font-bold text-base text-[#1A1A1A] hover:text-[#C85A17] transition-colors mb-1.5">
+                    <h3 className="font-serif font-bold text-base text-[#1A1A1A] dark:text-[#E6E2D8] hover:text-[#C85A17] transition-colors mb-1.5">
                       <a
                         href={source.url}
                         target="_blank"
@@ -531,13 +531,13 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
                     </h3>
 
                     {source.authors && (
-                      <p className="text-xs font-mono text-[#706B63] mb-2">
+                      <p className="text-xs font-mono text-[#706B63] dark:text-[#A09A8E] mb-2">
                         {source.authors}
                       </p>
                     )}
 
                     {/* Snippet */}
-                    <p className="text-xs sm:text-sm text-[#524E48] font-sans leading-relaxed">
+                    <p className="text-xs sm:text-sm text-[#524E48] dark:text-[#A09A8E] font-sans leading-relaxed">
                       "{source.snippet}"
                     </p>
                   </div>
@@ -552,22 +552,22 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
         <div className="lg:col-span-4 space-y-6">
           
           {/* Sources Searched Breakdown Card */}
-          <div className="bg-[#FAF9F5] border border-[#1A1A1A] rounded-sm p-5 shadow-[3px_3px_0px_0px_#1A1A1A]">
-            <h3 className="font-serif font-bold text-base text-[#1A1A1A] pb-3 border-b border-[#E7E2D8] mb-4 flex items-center justify-between">
+          <div className="bg-[#FAF9F5] dark:bg-[#1A1A1A] border border-[#1A1A1A] dark:border-[#333] rounded-sm p-5 shadow-[3px_3px_0px_0px_#1A1A1A]">
+            <h3 className="font-serif font-bold text-base text-[#1A1A1A] dark:text-[#E6E2D8] pb-3 border-b border-[#E7E2D8] dark:border-[#2E2E2E] mb-4 flex items-center justify-between">
               <span>Sources Searched</span>
-              <span className="text-xs font-mono text-[#706B63]">{data.sources.length} Total</span>
+              <span className="text-xs font-mono text-[#706B63] dark:text-[#A09A8E]">{data.sources.length} Total</span>
             </h3>
 
             <div className="space-y-3 mb-5">
               <div>
-                <div className="flex justify-between text-xs font-mono text-[#524E48] mb-1">
+                <div className="flex justify-between text-xs font-mono text-[#524E48] dark:text-[#A09A8E] mb-1">
                   <span className="flex items-center space-x-1.5">
                     <FileText className="w-3.5 h-3.5 text-amber-700" />
                     <span>Academic Papers (arXiv/IEEE)</span>
                   </span>
                   <span>{paperCount}</span>
                 </div>
-                <div className="w-full bg-[#EFECE6] h-1.5 rounded-xs overflow-hidden">
+                <div className="w-full bg-[#EFECE6] dark:bg-[#242422] h-1.5 rounded-xs overflow-hidden">
                   <div
                     className="bg-amber-700 h-full transition-all"
                     style={{ width: `${(paperCount / data.sources.length) * 100}%` }}
@@ -576,14 +576,14 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
               </div>
 
               <div>
-                <div className="flex justify-between text-xs font-mono text-[#524E48] mb-1">
+                <div className="flex justify-between text-xs font-mono text-[#524E48] dark:text-[#A09A8E] mb-1">
                   <span className="flex items-center space-x-1.5">
                     <Github className="w-3.5 h-3.5 text-slate-800" />
                     <span>GitHub Repositories</span>
                   </span>
                   <span>{githubCount}</span>
                 </div>
-                <div className="w-full bg-[#EFECE6] h-1.5 rounded-xs overflow-hidden">
+                <div className="w-full bg-[#EFECE6] dark:bg-[#242422] h-1.5 rounded-xs overflow-hidden">
                   <div
                     className="bg-slate-800 h-full transition-all"
                     style={{ width: `${(githubCount / data.sources.length) * 100}%` }}
@@ -592,14 +592,14 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
               </div>
 
               <div>
-                <div className="flex justify-between text-xs font-mono text-[#524E48] mb-1">
+                <div className="flex justify-between text-xs font-mono text-[#524E48] dark:text-[#A09A8E] mb-1">
                   <span className="flex items-center space-x-1.5">
                     <Globe className="w-3.5 h-3.5 text-emerald-700" />
                     <span>Web Specifications</span>
                   </span>
                   <span>{webCount}</span>
                 </div>
-                <div className="w-full bg-[#EFECE6] h-1.5 rounded-xs overflow-hidden">
+                <div className="w-full bg-[#EFECE6] dark:bg-[#242422] h-1.5 rounded-xs overflow-hidden">
                   <div
                     className="bg-emerald-700 h-full transition-all"
                     style={{ width: `${(webCount / data.sources.length) * 100}%` }}
@@ -608,29 +608,29 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
               </div>
             </div>
 
-            <div className="pt-3 border-t border-[#E7E2D8]">
-              <div className="flex items-center justify-between text-xs font-mono text-[#706B63] mb-1">
+            <div className="pt-3 border-t border-[#E7E2D8] dark:border-[#2E2E2E]">
+              <div className="flex items-center justify-between text-xs font-mono text-[#706B63] dark:text-[#A09A8E] mb-1">
                 <span>CITATION CONFIDENCE</span>
                 <span className="text-[#C85A17] font-bold">96.4%</span>
               </div>
-              <p className="text-[11px] text-[#706B63] leading-tight">
+              <p className="text-[11px] text-[#706B63] dark:text-[#A09A8E] leading-tight">
                 Peer-reviewed methodologies prioritized over web claims.
               </p>
             </div>
           </div>
 
           {/* Call to Action Next Step */}
-          <div className="bg-[#F4F1EA] border border-[#E7E2D8] rounded-sm p-5">
-            <h4 className="font-serif font-semibold text-sm text-[#1A1A1A] mb-2">
+          <div className="bg-[#F4F1EA] dark:bg-[#242422] border border-[#E7E2D8] dark:border-[#2E2E2E] rounded-sm p-5">
+            <h4 className="font-serif font-semibold text-sm text-[#1A1A1A] dark:text-[#E6E2D8] mb-2">
               Ready to Implement?
             </h4>
-            <p className="text-xs text-[#524E48] mb-4 leading-relaxed">
+            <p className="text-xs text-[#524E48] dark:text-[#A09A8E] mb-4 leading-relaxed">
               Transform these research findings into a structured project plan with architecture blueprints, tech stack tags, and milestone timelines.
             </p>
 
             <button
               onClick={onNavigateToPlan}
-              className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-[#1A1A1A] hover:bg-[#C85A17] text-[#FAF9F5] text-xs font-mono font-medium rounded-sm transition-colors cursor-pointer"
+              className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-[#1A1A1A] dark:bg-[#2A2A28] hover:bg-[#C85A17] text-[#FAF9F5] text-xs font-mono font-medium rounded-sm transition-colors cursor-pointer"
             >
               <span>Project Implementation Plan</span>
               <ChevronRight className="w-4 h-4" />

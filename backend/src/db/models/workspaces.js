@@ -15,10 +15,26 @@ function listWorkspaces(userId) {
     .prepare(`SELECT * FROM workspaces WHERE user_id = ? ORDER BY updated_at DESC`)
     .all(userId);
   return rows.map((w) => {
-    const itemCount = db
-      .prepare(`SELECT COUNT(*) as count FROM workspace_items WHERE workspace_id = ?`)
-      .get(w.id).count;
-    return { workspaceId: w.id, name: w.name, itemCount, updatedAt: w.updated_at };
+    const itemRows = db
+      .prepare(`SELECT * FROM workspace_items WHERE workspace_id = ? ORDER BY saved_at DESC`)
+      .all(w.id);
+    const items = itemRows.map((i) => ({
+      id: i.id,
+      sourceId: i.source_id,
+      title: i.title,
+      snippet: i.snippet,
+      type: i.type,
+      url: i.url,
+      savedAt: i.saved_at,
+    }));
+    return {
+      workspaceId: w.id,
+      name: w.name,
+      description: w.description || "",
+      itemCount: items.length,
+      updatedAt: w.updated_at,
+      items,
+    };
   });
 }
 
