@@ -1,12 +1,8 @@
 /**
- * Thin wrapper around Groq's OpenAI-compatible chat completions API.
- * Requires env var: GROQ_API_KEY (free tier — see backend/.env.example)
- *
- * Switched from the Anthropic Messages API to Groq to avoid requiring a
- * paid ANTHROPIC_API_KEY. Kept the same exported callLLM(prompt) signature
- * so service.js and prompt.js don't need to change at all.
+ * Thin Groq client for clustering, kept independent from summarizer.js and
+ * planner/llmClient.js on purpose (same reasoning as summarizer.js: avoids
+ * touching other modules' already-tested code just to share a few lines).
  */
-
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const MODEL = "llama-3.3-70b-versatile";
 
@@ -24,10 +20,7 @@ async function callLLM(prompt) {
     },
     body: JSON.stringify({
       model: MODEL,
-      max_tokens: 2000,
-      // The prompt already demands raw JSON with no fences; this forces
-      // it at the API level too, so parsePlanResponse() in service.js
-      // has less to strip/retry on.
+      max_tokens: 1200,
       response_format: { type: "json_object" },
       messages: [{ role: "user", content: prompt }],
     }),
@@ -40,11 +33,9 @@ async function callLLM(prompt) {
 
   const data = await response.json();
   const text = data.choices?.[0]?.message?.content;
-
   if (!text) {
     throw new Error("LLM response contained no text content.");
   }
-
   return text;
 }
 

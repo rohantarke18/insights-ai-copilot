@@ -5,7 +5,9 @@ const controller = require("./controller");
 // Full paths once mounted at app.use("/api", searchRoutes):
 // POST /api/sessions
 // GET  /api/sessions/:sessionId/deepsearch
+// POST /api/sessions/:sessionId/refresh   (Real-time Web Intelligence)
 router.post("/sessions", controller.createSession);
 router.get("/sessions/:sessionId/deepsearch", controller.getDeepSearchResults);
+router.post("/sessions/:sessionId/refresh", controller.refreshWebIntelligence);
 
 module.exports = router;

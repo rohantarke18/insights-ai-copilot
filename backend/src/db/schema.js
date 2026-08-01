@@ -35,6 +35,19 @@ function initSchema() {
       FOREIGN KEY (session_id) REFERENCES sessions(id)
     );
 
+    CREATE TABLE IF NOT EXISTS clusters (
+  session_id TEXT PRIMARY KEY,
+  clusters_json TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  FOREIGN KEY (session_id) REFERENCES sessions(id)
+);
+
+    CREATE TABLE IF NOT EXISTS telegram_links (
+  chat_id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL DEFAULT 'user-student-1',
+  linked_at TEXT NOT NULL
+);
+
     CREATE TABLE IF NOT EXISTS workspaces (
       id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL DEFAULT 'user-student-1',

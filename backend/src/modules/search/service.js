@@ -37,8 +37,12 @@ async function runSearchPipeline(ideaText) {
  * this up. It also means this request can take 5-15 seconds; the frontend's
  * existing multi-step loading UI ("Searching sources...", "Drafting...")
  * covers that wait naturally.
+ *
+ * @param {string} language - ISO-ish code (en, hi, mr, es, fr, ta, te, bn)
+ *   for Multilingual Support. Only affects the generated summary text —
+ *   search queries and source content are unaffected. Defaults to English.
  */
-exports.createResearchSession = async (ideaText, userId) => {
+exports.createResearchSession = async (ideaText, userId, language = "en") => {
   const session = sessionsModel.createSession(userId, ideaText);
 
   let sources = [];
@@ -69,7 +73,7 @@ exports.createResearchSession = async (ideaText, userId) => {
   // is worth surfacing as an actual failure.
   let summary;
   try {
-    summary = await generateSummary(ideaText, sources);
+    summary = await generateSummary(ideaText, sources, language);
   } catch (err) {
     console.error("[search] summary generation failed, falling back:", err.message);
     summary = sources.length > 0
@@ -101,5 +105,46 @@ exports.getDeepSearchResults = (sessionId) => {
     sessionId,
     summary: session.summary || "Research is still processing or failed to generate a summary.",
     sources,
+  };
+};
+
+/**
+ * Real-time Web Intelligence — re-runs ONLY the web provider (not GitHub/
+ * arXiv, which don't meaningfully change hour-to-hour the way news/blog
+ * results do) against the session's original idea text, and inserts only
+ * sources whose URL isn't already saved for this session. Citation
+ * numbering continues from the session's current max, so existing [1]-[8]
+ * references in the stored summary text never shift.
+ */
+exports.refreshWebIntelligence = async (sessionId) => {
+  const session = sessionsModel.getSession(sessionId);
+  if (!session) {
+    const err = new Error(`Session ${sessionId} not found.`);
+    err.statusCode = 404;
+    throw err;
+  }
+
+  const freshResults = await searchWeb(session.idea_text, 5, { advanced: true });
+
+  const existingUrls = sourcesModel.getExistingUrlsBySession(sessionId);
+  const genuinelyNew = freshResults.filter((r) => r.url && !existingUrls.has(r.url));
+
+  let startIndex = sourcesModel.getMaxCitationIndex(sessionId);
+  const newSourceRecords = genuinelyNew.map((s) => ({
+    id: "src_" + randomUUID(),
+    citationIndex: ++startIndex,
+    ...s,
+  }));
+
+  if (newSourceRecords.length > 0) {
+    sourcesModel.insertSources(sessionId, newSourceRecords);
+  }
+
+  return {
+    sessionId,
+    newSourcesCount: newSourceRecords.length,
+    newSources: newSourceRecords,
+    totalSources: sourcesModel.getSourcesBySession(sessionId).length,
+    checkedAt: new Date().toISOString(),
   };
 };

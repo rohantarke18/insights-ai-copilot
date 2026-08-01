@@ -22,6 +22,16 @@ app.use("/api", plannerRoutes);
 const searchRoutes = require("./src/modules/search/routes");
 app.use("/api", searchRoutes);
 
+
+
+// Clustering routes (Knowledge Clustering — groups sources by theme)
+const clusteringRoutes = require("./src/modules/clustering/routes");
+app.use("/api", clusteringRoutes);
+
+// Telegram AI Agent — optional, only starts if TELEGRAM_BOT_TOKEN is set
+const { startAgent } = require("./src/modules/agent");
+startAgent();
+
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });
 });

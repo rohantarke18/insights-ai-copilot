@@ -8,6 +8,21 @@
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const MODEL = "llama-3.3-70b-versatile";
 
+// Multilingual Support (Layer 2 component): the summary is the only thing
+// translated — source titles/snippets stay in their original language on
+// purpose, since translating those risks misrepresenting the actual source
+// content. "en" is the default/no-op case.
+const LANGUAGE_NAMES = {
+  en: "English",
+  hi: "Hindi",
+  mr: "Marathi",
+  es: "Spanish",
+  fr: "French",
+  ta: "Tamil",
+  te: "Telugu",
+  bn: "Bengali",
+};
+
 async function callGroq(prompt) {
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
@@ -40,10 +55,16 @@ async function callGroq(prompt) {
   return text;
 }
 
-function buildSummaryPrompt(ideaText, sources) {
+function buildSummaryPrompt(ideaText, sources, languageCode) {
   const sourceList = sources
     .map((s) => `[${s.citationIndex}] (${s.type}) ${s.title}: ${s.snippet}`)
     .join("\n");
+
+  const languageName = LANGUAGE_NAMES[languageCode] || "English";
+  const languageInstruction =
+    languageCode && languageCode !== "en"
+      ? `\nIMPORTANT: Write the entire summary in ${languageName}, not English. Keep the bracket citation numbers (e.g. [1], [2]) exactly as-is — those are not translated.`
+      : "";
 
   return `You are a research assistant helping a student evaluate a project idea.
 
@@ -62,18 +83,18 @@ Write a 2-3 paragraph research summary that:
 - Assesses whether this idea is worth pursuing and what already exists in this space
 - References specific sources inline using their bracket number, e.g. [1], [2], exactly matching the numbers above — do not invent a number that isn't listed
 - Identifies at least one genuine gap or opportunity for innovation
-- Is written in plain prose — no markdown headers, no bullet points
+- Is written in plain prose — no markdown headers, no bullet points${languageInstruction}
 
 Return ONLY the summary text. No preamble like "Here is the summary", no closing remarks.`;
 }
 
-async function generateSummary(ideaText, sources) {
+async function generateSummary(ideaText, sources, languageCode = "en") {
   if (sources.length === 0) {
     return "No external sources could be retrieved for this idea — search providers may be unconfigured or temporarily unavailable. This is a general assessment based on reasoning alone, not verified sources.";
   }
-  const prompt = buildSummaryPrompt(ideaText, sources);
+  const prompt = buildSummaryPrompt(ideaText, sources, languageCode);
   const raw = await callGroq(prompt);
   return raw.trim();
 }
 
-module.exports = { generateSummary };
+module.exports = { generateSummary, LANGUAGE_NAMES };

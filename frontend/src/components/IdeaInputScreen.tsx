@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, ArrowRight, CheckCircle2, Loader2, Lightbulb, Compass, FileText, Database, ShieldAlert } from 'lucide-react';
+import { Sparkles, ArrowRight, CheckCircle2, Loader2, Lightbulb, Compass, FileText, Database, ShieldAlert, Languages } from 'lucide-react';
 import { createResearchSession } from '../services/api';
+import { SupportedLanguage } from '../types';
 
 interface IdeaInputScreenProps {
   onSessionCreated: (sessionId: string, ideaText: string) => void;
@@ -40,8 +41,22 @@ const LOADING_STEPS = [
   { id: 4, label: "Generating technical architecture & implementation roadmap", detail: "Formulating tech stack tags, milestone timelines, and required APIs..." }
 ];
 
+// Multilingual Support (Layer 2 component): only the AI-generated summary is
+// translated — source titles/snippets stay in their original language.
+const SUPPORTED_LANGUAGES: { code: SupportedLanguage; label: string }[] = [
+  { code: 'en', label: 'English' },
+  { code: 'hi', label: 'Hindi' },
+  { code: 'mr', label: 'Marathi' },
+  { code: 'es', label: 'Spanish' },
+  { code: 'fr', label: 'French' },
+  { code: 'ta', label: 'Tamil' },
+  { code: 'te', label: 'Telugu' },
+  { code: 'bn', label: 'Bengali' },
+];
+
 export const IdeaInputScreen: React.FC<IdeaInputScreenProps> = ({ onSessionCreated }) => {
   const [ideaText, setIdeaText] = useState('');
+  const [language, setLanguage] = useState<SupportedLanguage>('en');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
@@ -66,7 +81,7 @@ export const IdeaInputScreen: React.FC<IdeaInputScreenProps> = ({ onSessionCreat
     }, 700);
 
     try {
-      const session = await createResearchSession(ideaText.trim());
+      const session = await createResearchSession(ideaText.trim(), language);
       // Wait briefly for step animation to complete smoothly
       setTimeout(() => {
         clearInterval(stepInterval);
@@ -104,9 +119,29 @@ export const IdeaInputScreen: React.FC<IdeaInputScreenProps> = ({ onSessionCreat
       {!isSubmitting ? (
         <form onSubmit={handleSubmit} className="mb-10">
           <div className="bg-[#FAF9F5] border-2 border-[#1A1A1A] rounded-sm p-4 sm:p-6 shadow-[4px_4px_0px_0px_#1A1A1A] transition-all">
-            <label htmlFor="idea-input" className="block text-xs font-mono uppercase tracking-wider text-[#706B63] mb-2 font-semibold">
-              Project Concept / Research Goal
-            </label>
+            <div className="flex items-center justify-between mb-2">
+              <label htmlFor="idea-input" className="block text-xs font-mono uppercase tracking-wider text-[#706B63] font-semibold">
+                Project Concept / Research Goal
+              </label>
+
+              {/* Multilingual Support: summary output language selector */}
+              <div className="flex items-center space-x-1.5">
+                <Languages className="w-3.5 h-3.5 text-[#C85A17]" />
+                <select
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value as SupportedLanguage)}
+                  title="Summary output language"
+                  className="bg-[#FAF9F5] border border-[#E7E2D8] focus:border-[#C85A17] rounded-xs px-2 py-1 text-xs font-mono text-[#1A1A1A] focus:outline-none cursor-pointer"
+                >
+                  {SUPPORTED_LANGUAGES.map((lang) => (
+                    <option key={lang.code} value={lang.code}>
+                      {lang.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
             <textarea
               id="idea-input"
               rows={4}

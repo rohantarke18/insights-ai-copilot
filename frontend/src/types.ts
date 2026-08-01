@@ -1,4 +1,5 @@
 export type SourceType = 'web' | 'github' | 'paper';
+export type SupportedLanguage = 'en' | 'hi' | 'mr' | 'es' | 'fr' | 'ta' | 'te' | 'bn';
 
 export interface Source {
   id: string;
@@ -9,6 +10,7 @@ export interface Source {
   citationIndex: number;
   authors?: string;
   publishedYear?: string;
+  publishedDate?: string | null;
   stars?: number;
   relevanceScore?: number;
   workspaceSaved?: boolean;
@@ -18,6 +20,26 @@ export interface DeepSearchResults {
   sessionId: string;
   summary: string;
   sources: Source[];
+}
+
+export interface KnowledgeCluster {
+  label: string;
+  description: string;
+  sources: Source[];
+}
+
+export interface ClusteringResults {
+  sessionId: string;
+  clusters: KnowledgeCluster[];
+}
+
+// Result of a Real-time Web Intelligence refresh — POST /sessions/:id/refresh
+export interface RefreshResult {
+  sessionId: string;
+  newSourcesCount: number;
+  newSources: Source[];
+  totalSources: number;
+  checkedAt: string;
 }
 
 export interface TechStackCategory {
@@ -95,4 +117,3 @@ export interface User {
   role: string;
   avatar?: string;
 }
-

@@ -13,8 +13,8 @@ import { getDashboardData } from './services/api';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<'dashboard' | 'input' | 'deepsearch' | 'projecthub' | 'workspaces'>('dashboard');
-  const [activeSessionId, setActiveSessionId] = useState<string | null>('session-food-waste');
-  const [activeSessionTitle, setActiveSessionTitle] = useState<string | null>('Reduce food waste in college hostels using IoT weight sensors and computer vision');
+  const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
+  const [activeSessionTitle, setActiveSessionTitle] = useState<string | null>(null);
   const [saveModalSource, setSaveModalSource] = useState<Source | null>(null);
 
   // Theme state

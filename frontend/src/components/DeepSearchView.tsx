@@ -12,10 +12,13 @@ import {
   Sparkles,
   Share2,
   Layers,
-  ChevronRight
+  ChevronRight,
+  RefreshCw,
+  Radio,
+  Clock
 } from 'lucide-react';
-import { DeepSearchResults, Source, Workspace } from '../types';
-import { getDeepSearchResults, getWorkspaces, saveToWorkspace } from '../services/api';
+import { DeepSearchResults, Source, Workspace, KnowledgeCluster } from '../types';
+import { getDeepSearchResults, getWorkspaces, saveToWorkspace, getKnowledgeClusters, refreshWebIntelligence } from '../services/api';
 
 interface DeepSearchViewProps {
   sessionId: string;
@@ -36,6 +39,15 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
   const [highlightedCitation, setHighlightedCitation] = useState<number | null>(null);
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [savedSourceIds, setSavedSourceIds] = useState<Set<string>>(new Set());
+  const [clusters, setClusters] = useState<KnowledgeCluster[]>([]);
+  const [clustersLoading, setClustersLoading] = useState<boolean>(true);
+  const [activeCluster, setActiveCluster] = useState<string | null>(null);
+
+  // Real-time Web Intelligence state
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [lastCheckedAt, setLastCheckedAt] = useState<string | null>(null);
+  const [newSourcesFound, setNewSourcesFound] = useState<number | null>(null);
+  const [refreshError, setRefreshError] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadResults() {
@@ -61,6 +73,57 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
     loadResults();
   }, [sessionId]);
 
+  useEffect(() => {
+    // Loaded independently of the main DeepSearch results: clustering is an
+    // enhancement, and its own request failing shouldn't block the summary
+    // and source list (which already load above) from rendering.
+    let cancelled = false;
+    async function loadClusters() {
+      setClustersLoading(true);
+      setActiveCluster(null);
+      try {
+        const res = await getKnowledgeClusters(sessionId);
+        if (!cancelled) setClusters(res.clusters);
+      } catch (err) {
+        console.error('Error fetching knowledge clusters:', err);
+        if (!cancelled) setClusters([]);
+      } finally {
+        if (!cancelled) setClustersLoading(false);
+      }
+    }
+    loadClusters();
+    return () => { cancelled = true; };
+  }, [sessionId]);
+
+  // Reset the Real-time Web Intelligence panel state whenever the session changes
+  useEffect(() => {
+    setLastCheckedAt(null);
+    setNewSourcesFound(null);
+    setRefreshError(null);
+  }, [sessionId]);
+
+  const handleRefresh = async () => {
+    if (refreshing) return;
+    setRefreshing(true);
+    setRefreshError(null);
+    setNewSourcesFound(null);
+    try {
+      const result = await refreshWebIntelligence(sessionId);
+      setLastCheckedAt(result.checkedAt);
+      setNewSourcesFound(result.newSourcesCount);
+      if (result.newSourcesCount > 0) {
+        setData(prev =>
+          prev ? { ...prev, sources: [...prev.sources, ...result.newSources] } : prev
+        );
+      }
+    } catch (err) {
+      console.error('Error refreshing web intelligence:', err);
+      setRefreshError('Could not check for the latest sources. Please try again.');
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   if (loading || !data) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
@@ -83,10 +146,36 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
   const githubCount = data.sources.filter(s => s.type === 'github').length;
   const webCount = data.sources.filter(s => s.type === 'web').length;
 
+  const activeClusterSourceIds = activeCluster
+    ? new Set(clusters.find(c => c.label === activeCluster)?.sources.map(s => s.id) || [])
+    : null;
+
   const filteredSources = data.sources.filter(s => {
-    if (filterType === 'all') return true;
-    return s.type === filterType;
+    if (filterType !== 'all' && s.type !== filterType) return false;
+    if (activeClusterSourceIds && !activeClusterSourceIds.has(s.id)) return false;
+    return true;
   });
+
+  const formatCheckedAt = (iso: string) => {
+    try {
+      return new Date(iso).toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit'
+      });
+    } catch {
+      return iso;
+    }
+  };
+
+  const formatPublishedDate = (iso: string) => {
+    try {
+      return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    } catch {
+      return iso;
+    }
+  };
 
   // Render synthesized summary text with interactive citation tags
   const renderSummaryWithCitations = (summaryText: string) => {
@@ -191,6 +280,125 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
             </div>
           </div>
 
+          {/* Real-time Web Intelligence Panel — distinct Layer 2 capability,
+              separate from DeepSearch above. Re-checks the live web for new
+              sources on the same idea rather than re-analyzing what's
+              already been found. */}
+          <div className="bg-[#FAF9F5] border border-[#1A1A1A] rounded-sm p-5 sm:p-6 shadow-[3px_3px_0px_0px_#1A1A1A]">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 pb-3 border-b border-[#E7E2D8]">
+              <div className="flex items-center space-x-2">
+                <Radio className="w-4 h-4 text-[#C85A17]" />
+                <h2 className="text-xs font-mono uppercase tracking-widest text-[#706B63] font-bold">
+                  Real-time Web Intelligence
+                </h2>
+              </div>
+
+              <button
+                onClick={handleRefresh}
+                disabled={refreshing}
+                className={`inline-flex items-center justify-center space-x-2 px-4 py-2 text-xs font-mono font-medium rounded-sm transition-colors shadow-xs ${
+                  refreshing
+                    ? 'bg-[#EFECE6] text-[#9C9588] cursor-not-allowed'
+                    : 'bg-[#1A1A1A] hover:bg-[#C85A17] text-[#FAF9F5] cursor-pointer'
+                }`}
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
+                <span>{refreshing ? 'Checking live web...' : 'Check for Latest'}</span>
+              </button>
+            </div>
+
+            <p className="text-xs text-[#524E48] font-sans leading-relaxed mb-3">
+              Re-scans the live web for new sources on this idea since your last check — separate from the DeepSearch summary above, which only reflects sources found at session creation.
+            </p>
+
+            <div className="flex flex-wrap items-center gap-3 text-xs font-mono">
+              {lastCheckedAt && (
+                <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 bg-[#EFECE6] border border-[#E7E2D8] text-[#524E48] rounded-xs">
+                  <Clock className="w-3 h-3 text-[#706B63]" />
+                  <span>Last checked: {formatCheckedAt(lastCheckedAt)}</span>
+                </span>
+              )}
+
+              {newSourcesFound !== null && (
+                newSourcesFound > 0 ? (
+                  <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 bg-emerald-50 border border-emerald-300 text-emerald-800 rounded-xs font-semibold">
+                    <Sparkles className="w-3 h-3" />
+                    <span>+{newSourcesFound} new source{newSourcesFound === 1 ? '' : 's'} found</span>
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center px-2.5 py-1 bg-[#EFECE6] border border-[#E7E2D8] text-[#706B63] rounded-xs">
+                    No new sources since last check
+                  </span>
+                )
+              )}
+
+              {refreshError && (
+                <span className="text-red-700">{refreshError}</span>
+              )}
+            </div>
+          </div>
+
+          {/* Knowledge Clusters Section */}
+          {(clustersLoading || clusters.length > 0) && (
+            <div className="bg-[#FAF9F5] border border-[#1A1A1A] rounded-sm p-5 sm:p-6 shadow-[3px_3px_0px_0px_#1A1A1A]">
+              <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#E7E2D8]">
+                <div className="flex items-center space-x-2">
+                  <Layers className="w-4 h-4 text-[#C85A17]" />
+                  <h2 className="text-xs font-mono uppercase tracking-widest text-[#706B63] font-bold">
+                    Knowledge Clusters
+                  </h2>
+                </div>
+                {activeCluster && (
+                  <button
+                    onClick={() => setActiveCluster(null)}
+                    className="text-[10px] font-mono text-[#C85A17] hover:underline cursor-pointer"
+                  >
+                    Clear filter ×
+                  </button>
+                )}
+              </div>
+
+              {clustersLoading ? (
+                <div className="flex flex-wrap gap-2 animate-pulse">
+                  <div className="h-16 w-40 bg-[#EFECE6] rounded-sm"></div>
+                  <div className="h-16 w-48 bg-[#EFECE6] rounded-sm"></div>
+                  <div className="h-16 w-36 bg-[#EFECE6] rounded-sm"></div>
+                </div>
+              ) : (
+                <div className="flex flex-wrap gap-2.5">
+                  {clusters.map((cluster) => {
+                    const isActive = activeCluster === cluster.label;
+                    return (
+                      <button
+                        key={cluster.label}
+                        onClick={() => setActiveCluster(isActive ? null : cluster.label)}
+                        title={cluster.description}
+                        className={`text-left px-3.5 py-2.5 rounded-sm border transition-all cursor-pointer max-w-[240px] ${
+                          isActive
+                            ? 'bg-[#C85A17] border-[#C85A17] text-[#FAF9F5]'
+                            : 'bg-[#EFECE6] border-[#E7E2D8] hover:border-[#1A1A1A] text-[#1A1A1A]'
+                        }`}
+                      >
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-serif font-semibold text-sm truncate">{cluster.label}</span>
+                          <span className={`text-[10px] font-mono shrink-0 ${isActive ? 'text-[#FAF9F5]/80' : 'text-[#706B63]'}`}>
+                            ({cluster.sources.length})
+                          </span>
+                        </div>
+                        <p className={`text-[11px] mt-0.5 leading-snug line-clamp-2 ${isActive ? 'text-[#FAF9F5]/90' : 'text-[#706B63]'}`}>
+                          {cluster.description}
+                        </p>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+              <p className="text-[11px] text-[#706B63] mt-3 font-mono">
+                Click a cluster to filter the sources below to that theme.
+              </p>
+            </div>
+          )}
+
           {/* Source List Section */}
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
@@ -281,6 +489,16 @@ export const DeepSearchView: React.FC<DeepSearchViewProps> = ({
                         {source.publishedYear && (
                           <span className="text-[10px] font-mono text-[#706B63]">
                             Year: {source.publishedYear}
+                          </span>
+                        )}
+
+                        {/* Only shown when Tavily actually returned a publish
+                            date — silently omitted otherwise rather than
+                            showing an "unknown date" placeholder. */}
+                        {source.publishedDate && (
+                          <span className="inline-flex items-center space-x-1 text-[10px] font-mono text-[#706B63] bg-[#EFECE6] px-1.5 py-0.5 rounded-xs">
+                            <Clock className="w-2.5 h-2.5" />
+                            <span>{formatPublishedDate(source.publishedDate)}</span>
                           </span>
                         )}
                       </div>

@@ -1,14 +1,19 @@
 const { buildPlannerPrompt } = require("./prompt");
 const { callLLM } = require("./llmClient");
-const { getFakeSession, getFakeSources } = require("./fakeData");
+const sessionsModel = require("../../db/models/sessions");
+const sourcesModel = require("../../db/models/sources");
+const plansModel = require("../../db/models/plans");
 
-// TODO (Day 2): swap this for real queries once backend/src/db/schema.js
-// and a shared DB connection module exist, e.g.:
-//   const session = await db.get("SELECT * FROM sessions WHERE id = ?", [sessionId]);
-//   const sources  = await db.all("SELECT * FROM sources WHERE session_id = ?", [sessionId]);
+// Real DB reads — replaces the old fakeData.js stand-ins now that
+// backend/src/db/schema.js and a shared DB connection module exist.
 async function fetchSessionData(sessionId) {
-  const session = getFakeSession(sessionId);
-  const sources = getFakeSources(sessionId);
+  const session = sessionsModel.getSession(sessionId);
+  if (!session) {
+    const err = new Error(`Session ${sessionId} not found.`);
+    err.statusCode = 404;
+    throw err;
+  }
+  const sources = sourcesModel.getSourcesBySession(sessionId);
   return { session, sources };
 }
 
@@ -36,6 +41,13 @@ function validatePlanShape(plan) {
 }
 
 exports.getPlan = async (sessionId) => {
+  // Serve a cached plan if one already exists — avoids re-calling the LLM
+  // (and risking a different answer) every time the user revisits Project Hub.
+  const cached = plansModel.getPlan(sessionId);
+  if (cached) {
+    return cached;
+  }
+
   const { session, sources } = await fetchSessionData(sessionId);
   const prompt = buildPlannerPrompt(session.idea_text, sources);
 
@@ -63,5 +75,6 @@ exports.getPlan = async (sessionId) => {
   }
 
   plan.sessionId = sessionId;
+  plansModel.savePlan(sessionId, plan);
   return plan;
 };
